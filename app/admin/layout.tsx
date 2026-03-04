@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { logoutAdmin } from "@/app/admin/actions";
+import { BrandIcon } from "@/components/shared/brand-icon";
 
 export default function AdminLayout({
   children,
@@ -8,15 +9,20 @@ export default function AdminLayout({
 }) {
   return (
     <div className="min-h-screen bg-[#efe3d4]">
-      <header className="sticky top-0 z-20 border-b border-[#c1ab92] bg-[#f8efe2]/95">
+      <header className="sticky top-0 z-20 border-b border-[#fff8ee] bg-[#f8efe2]/95">
         <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-4 md:px-8">
           <div>
             <p className="text-xs uppercase tracking-[0.28em] text-[#8a6a4f]">
               Dashboard
             </p>
-            <h1 className="text-2xl text-[#3a2b22] md:text-3xl">
-              Admin Koleksi Keris Antik
-            </h1>
+            <div className="flex items-center gap-2">
+              <span className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-[#efe3d4] text-[#5a4639]">
+                <BrandIcon className="h-4 w-4" />
+              </span>
+              <h1 className="text-2xl text-[#3a2b22] md:text-3xl">
+                Admin Koleksi Keris Antik
+              </h1>
+            </div>
           </div>
           <div className="flex items-center gap-3">
             <Link href="/" className="btn-ui btn-neutral">

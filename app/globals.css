@@ -67,7 +67,7 @@ h6 {
   content: "";
   position: absolute;
   inset: 0;
-  border: 1px solid rgba(138, 106, 79, 0.22);
+  border: 1px solid rgba(255, 250, 244, 0.6);
   pointer-events: none;
   border-radius: inherit;
 }
@@ -169,7 +169,7 @@ body::after {
 
 /* Glass panels with gold accent */
 .glass-panel {
-  border: 1px solid rgba(138, 106, 79, 0.28);
+  border: 1px solid rgba(255, 250, 244, 0.7);
   background: linear-gradient(
     135deg,
     rgba(255, 250, 245, 0.92),
@@ -199,7 +199,7 @@ body::after {
 }
 
 .glass-panel-strong {
-  border: 1px solid rgba(138, 106, 79, 0.3);
+  border: 1px solid rgba(255, 250, 244, 0.78);
   background: linear-gradient(
     135deg,
     rgba(255, 250, 245, 0.95),
@@ -223,7 +223,7 @@ body::after {
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(138, 106, 79, 0.6),
+    rgba(255, 250, 244, 0.9),
     transparent
   );
 }
@@ -271,7 +271,7 @@ body::after {
 .btn-dark {
   background: linear-gradient(180deg, #5a4639, #3a2b22);
   color: #fbf5ee;
-  border-color: rgba(154, 112, 72, 0.45);
+  border-color: rgba(255, 250, 244, 0.35);
 }
 
 .btn-dark:hover {
@@ -281,7 +281,7 @@ body::after {
 .btn-amber {
   background: linear-gradient(180deg, #b88a60, #9a7048);
   color: #fffaf4;
-  border-color: rgba(138, 106, 79, 0.4);
+  border-color: rgba(255, 250, 244, 0.35);
 }
 
 .btn-amber:hover {
@@ -309,13 +309,13 @@ body::after {
     rgba(241, 227, 212, 0.92)
   );
   color: #5a4639;
-  border-color: rgba(138, 106, 79, 0.35);
+  border-color: rgba(255, 250, 244, 0.78);
   backdrop-filter: blur(6px);
 }
 
 .btn-neutral:hover {
   background: linear-gradient(180deg, #fff9f2, rgba(245, 234, 220, 0.95));
-  border-color: rgba(154, 112, 72, 0.45);
+  border-color: rgba(255, 250, 244, 0.92);
 }
 
 /* Form fields */

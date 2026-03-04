@@ -57,6 +57,10 @@ export const metadata: Metadata = {
     description:
       "Galeri koleksi keris antik bernuansa museum dengan kurasi premium.",
   },
+  icons: {
+    icon: "/icon.svg",
+    shortcut: "/icon.svg",
+  },
 };
 
 export default function RootLayout({
