@@ -1,4 +1,9 @@
 import type { Product } from "@/lib/types";
+import {
+  DEFAULT_PRODUCT_CATEGORY,
+  PRODUCT_CATEGORIES,
+  getProductCategoryLabel,
+} from "@/lib/product-categories";
 
 type ProductFormFieldsProps = {
   product?: Product;
@@ -79,7 +84,7 @@ export function ProductFormFields({
         />
       </div>
 
-      <div className="grid gap-4 md:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-5">
         <div>
           <label
             htmlFor="status"
@@ -95,6 +100,27 @@ export function ProductFormFields({
           >
             <option value="available">Tersedia</option>
             <option value="sold">Terjual</option>
+          </select>
+        </div>
+
+        <div>
+          <label
+            htmlFor="category"
+            className="mb-1 block text-sm font-medium text-stone-700"
+          >
+            Kategori
+          </label>
+          <select
+            id="category"
+            name="category"
+            defaultValue={product?.category ?? DEFAULT_PRODUCT_CATEGORY}
+            className="field-ui"
+          >
+            {PRODUCT_CATEGORIES.map((category) => (
+              <option key={category} value={category}>
+                {getProductCategoryLabel(category)}
+              </option>
+            ))}
           </select>
         </div>
 

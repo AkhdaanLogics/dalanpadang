@@ -22,7 +22,7 @@ export default async function EditProductPage({
   const { data, error } = await supabase
     .from("products")
     .select(
-      "id,name,slug,code,description,image_url,price,show_price,negotiable,status,created_at",
+      "id,name,slug,code,description,image_url,price,show_price,negotiable,category,status,created_at",
     )
     .eq("id", id)
     .single();

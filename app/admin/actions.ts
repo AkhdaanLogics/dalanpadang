@@ -6,6 +6,10 @@ import { isAdminUser } from "@/lib/auth";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import {
+  DEFAULT_PRODUCT_CATEGORY,
+  normalizeProductCategory,
+} from "@/lib/product-categories";
+import {
   generateUniqueProductCode,
   isProductCodeFormatValid,
 } from "@/lib/utils/product-code";
@@ -91,6 +95,10 @@ export async function createProduct(formData: FormData) {
   const name = String(formData.get("name") ?? "").trim();
   const requestedCode = String(formData.get("code") ?? "").trim();
   const description = String(formData.get("description") ?? "").trim();
+  const rawCategory = String(
+    formData.get("category") ?? DEFAULT_PRODUCT_CATEGORY,
+  ).trim();
+  const category = normalizeProductCategory(rawCategory);
   const status = String(formData.get("status") ?? "available") as
     | "available"
     | "sold";
@@ -129,6 +137,7 @@ export async function createProduct(formData: FormData) {
     code,
     slug,
     description,
+    category,
     image_url: imageUrl,
     price,
     show_price: showPrice,
@@ -151,6 +160,10 @@ export async function updateProduct(formData: FormData) {
   const id = String(formData.get("id") ?? "").trim();
   const name = String(formData.get("name") ?? "").trim();
   const description = String(formData.get("description") ?? "").trim();
+  const rawCategory = String(
+    formData.get("category") ?? DEFAULT_PRODUCT_CATEGORY,
+  ).trim();
+  const category = normalizeProductCategory(rawCategory);
   const status = String(formData.get("status") ?? "available") as
     | "available"
     | "sold";
@@ -188,6 +201,7 @@ export async function updateProduct(formData: FormData) {
       code: finalCode,
       slug,
       description,
+      category,
       image_url: imageUrl,
       price,
       show_price: showPrice,

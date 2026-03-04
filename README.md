@@ -176,6 +176,40 @@ Gunakan endpoint admin-protected:
 ## Catatan Keamanan
 
 - Route admin diproteksi middleware.
+
+## Update Skema (Kategori Produk)
+
+Jika database sudah terlanjur jalan sebelum fitur kategori ditambahkan, jalankan SQL berikut di Supabase SQL Editor:
+
+```sql
+alter table public.products
+add column if not exists category text not null default 'koleksi-premium';
+
+update public.products
+set category = case
+	when category = 'harian' then 'koleksi-reguler'
+	when category = 'langka' then 'koleksi-langka'
+	when category = 'pusaka' then 'koleksi-premium'
+	else category
+end;
+
+alter table public.products
+drop constraint if exists products_category_check;
+
+do $$
+begin
+	if not exists (
+		select 1
+		from pg_constraint
+		where conname = 'products_category_check'
+	) then
+		alter table public.products
+		add constraint products_category_check
+		check (category in ('koleksi-reguler', 'koleksi-langka', 'koleksi-premium'));
+	end if;
+end $$;
+```
+
 - RLS diaktifkan untuk tabel utama.
 - Policy publik default hanya baca produk `available`.
 - Operasi admin memakai verifikasi role admin.

@@ -11,6 +11,7 @@ create table if not exists public.products (
   name text not null,
   slug text not null unique,
   code text not null unique,
+  category text not null default 'koleksi-premium',
   description text not null,
   image_url text not null,
   price numeric null,
@@ -22,6 +23,33 @@ create table if not exists public.products (
 
 alter table public.products
 add column if not exists negotiable boolean not null default false;
+
+alter table public.products
+add column if not exists category text not null default 'koleksi-premium';
+
+update public.products
+set category = case
+  when category = 'harian' then 'koleksi-reguler'
+  when category = 'langka' then 'koleksi-langka'
+  when category = 'pusaka' then 'koleksi-premium'
+  else category
+end;
+
+alter table public.products
+drop constraint if exists products_category_check;
+
+do $$
+begin
+  if not exists (
+    select 1
+    from pg_constraint
+    where conname = 'products_category_check'
+  ) then
+    alter table public.products
+    add constraint products_category_check
+    check (category in ('koleksi-reguler', 'koleksi-langka', 'koleksi-premium'));
+  end if;
+end $$;
 
 -- =====================================
 -- Table: inquiries

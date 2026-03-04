@@ -1,5 +1,10 @@
 export type ProductStatus = "available" | "sold";
 
+export type ProductCategory =
+  | "koleksi-reguler"
+  | "koleksi-langka"
+  | "koleksi-premium";
+
 export interface Product {
   id: string;
   name: string;
@@ -10,6 +15,7 @@ export interface Product {
   price: number | null;
   show_price: boolean;
   negotiable: boolean;
+  category?: ProductCategory | null;
   status: ProductStatus;
   created_at: string;
 }

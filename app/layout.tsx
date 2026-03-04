@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Cinzel, Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
+import { InstallAppButton } from "@/components/shared/install-app-button";
 import "./globals.css";
 
 const headingFont = Cormorant_Garamond({
@@ -61,6 +62,7 @@ export const metadata: Metadata = {
     icon: "/icon.svg",
     shortcut: "/icon.svg",
   },
+  manifest: "/manifest.webmanifest",
 };
 
 export default function RootLayout({
@@ -74,6 +76,7 @@ export default function RootLayout({
         className={`${headingFont.variable} ${accentFont.variable} ${bodyFont.variable} bg-[#efe3d4] text-[#3a2b22] antialiased`}
       >
         {children}
+        <InstallAppButton />
         <Analytics />
       </body>
     </html>

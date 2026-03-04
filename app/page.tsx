@@ -1,4 +1,4 @@
-import { ProductGrid } from "@/components/public/product-grid";
+import { ProductCatalog } from "@/components/public/product-catalog";
 import { BrandIcon } from "@/components/shared/brand-icon";
 import { getPublicProducts } from "@/lib/products";
 
@@ -64,7 +64,7 @@ export default async function HomePage() {
             {products.length} koleksi
           </span>
         </div>
-        <ProductGrid products={products} />
+        <ProductCatalog products={products} />
       </section>
     </main>
   );

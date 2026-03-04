@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Product } from "@/lib/types";
 import { WatermarkedImage } from "@/components/shared/watermarked-image";
+import { getProductCategoryLabel } from "@/lib/product-categories";
 
 type ProductCardProps = {
   product: Product;
@@ -8,6 +9,7 @@ type ProductCardProps = {
 
 export function ProductCard({ product }: ProductCardProps) {
   const sold = product.status === "sold";
+  const categoryLabel = getProductCategoryLabel(product.category);
 
   return (
     <article className="card-antique group overflow-hidden rounded-2xl border border-[#c1ab92] bg-[#fffaf4]/95 shadow-sm transition duration-300 hover:-translate-y-0.5 hover:shadow-xl">
@@ -39,7 +41,7 @@ export function ProductCard({ product }: ProductCardProps) {
 
         <div className="flex items-center justify-between border-t border-[#d8c6b0] pt-3">
           <span className="text-xs font-medium uppercase tracking-[0.2em] text-[#8a6a4f]">
-            Koleksi Premium
+            {categoryLabel}
           </span>
           <Link
             href={`/produk/${product.slug}`}

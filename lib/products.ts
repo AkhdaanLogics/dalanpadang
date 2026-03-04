@@ -8,7 +8,7 @@ export async function getPublicProducts() {
   const { data, error } = await supabase
     .from("products")
     .select(
-      "id,name,slug,code,description,image_url,price,show_price,negotiable,status,created_at",
+      "id,name,slug,code,description,image_url,price,show_price,negotiable,category,status,created_at",
     )
     .order("created_at", { ascending: false });
 
@@ -25,7 +25,7 @@ export async function getProductBySlug(slug: string) {
   const { data, error } = await supabase
     .from("products")
     .select(
-      "id,name,slug,code,description,image_url,price,show_price,negotiable,status,created_at",
+      "id,name,slug,code,description,image_url,price,show_price,negotiable,category,status,created_at",
     )
     .eq("slug", slug)
     .single();

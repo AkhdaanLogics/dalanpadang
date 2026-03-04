@@ -1,0 +1,19 @@
+{
+  "name": "Koleksi Keris Antik",
+  "short_name": "Keris Antik",
+  "description": "Galeri koleksi keris antik dengan akses cepat ke WhatsApp.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#efe3d4",
+  "theme_color": "#3a2b22",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
