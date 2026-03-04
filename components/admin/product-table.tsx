@@ -20,8 +20,8 @@ export function ProductTable({ products }: ProductTableProps) {
   }
 
   return (
-    <div className="glass-panel overflow-x-auto rounded-xl">
-      <table className="min-w-[760px] text-left text-sm sm:min-w-full">
+    <div className="overflow-x-auto rounded-xl border border-[#fff8ee] bg-[#fff8f0] shadow-sm">
+      <table className="min-w-190 text-left text-sm sm:min-w-full">
         <thead className="bg-stone-100/80 text-stone-700">
           <tr>
             <th className="px-4 py-3">Nama</th>
@@ -59,7 +59,7 @@ export function ProductTable({ products }: ProductTableProps) {
                   {product.show_price ? "Ditampilkan" : "Disembunyikan"}
                 </td>
                 <td className="px-4 py-3">
-                  <div className="flex min-w-[280px] flex-wrap gap-2">
+                  <div className="flex min-w-70 flex-wrap gap-2">
                     <Link
                       href={`/admin/produk/${product.id}/edit`}
                       className="btn-ui btn-amber px-3 py-1.5 text-xs"
