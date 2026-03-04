@@ -23,11 +23,17 @@ export default async function AdminDashboardPage() {
               Ringkasan Data
             </h2>
           </div>
-          <div className="flex gap-2">
-            <Link href="/admin/produk/baru" className="btn-ui btn-amber">
+          <div className="flex w-full flex-wrap gap-2 sm:w-auto">
+            <Link
+              href="/admin/produk/baru"
+              className="btn-ui btn-amber flex-1 text-center sm:flex-none"
+            >
               Tambah Produk
             </Link>
-            <a href="/api/backup" className="btn-ui btn-dark">
+            <a
+              href="/api/backup"
+              className="btn-ui btn-dark flex-1 text-center sm:flex-none"
+            >
               Unduh Backup JSON
             </a>
           </div>

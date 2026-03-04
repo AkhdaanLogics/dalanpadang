@@ -1,5 +1,23 @@
 import type { Product } from "@/lib/types";
 
+function normalizeWhatsAppNumber(rawNumber: string) {
+  const digits = rawNumber.replace(/\D/g, "");
+
+  if (!digits) {
+    return "";
+  }
+
+  if (digits.startsWith("0")) {
+    return `62${digits.slice(1)}`;
+  }
+
+  if (digits.startsWith("62")) {
+    return digits;
+  }
+
+  return digits;
+}
+
 function getProductUrl(slug: string) {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
   return `${siteUrl}/produk/${slug}`;
@@ -33,5 +51,13 @@ export function createWhatsAppNegotiationMessage(
 }
 
 export function createWhatsAppLink(encodedMessage: string) {
-  return `https://wa.me/?text=${encodedMessage}`;
+  const targetNumber = normalizeWhatsAppNumber(
+    process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "",
+  );
+
+  if (!targetNumber) {
+    return `https://wa.me/?text=${encodedMessage}`;
+  }
+
+  return `https://wa.me/${targetNumber}?text=${encodedMessage}`;
 }

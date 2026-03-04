@@ -12,8 +12,8 @@ export default async function HomePage() {
   const totalTerjual = products.filter((item) => item.status === "sold").length;
 
   return (
-    <main className="mx-auto min-h-screen w-full max-w-7xl px-4 py-8 md:px-8 md:py-10">
-      <header className="hero-gradient relative mb-8 overflow-hidden rounded-2xl border border-[#fff8ee]/45 px-6 py-9 text-[#f8efe2] shadow-lg md:px-10">
+    <main className="mx-auto min-h-[100dvh] w-full max-w-7xl px-4 py-6 md:px-8 md:py-10">
+      <header className="hero-gradient relative mb-8 overflow-hidden rounded-2xl border border-[#fff8ee]/45 px-5 py-8 text-[#f8efe2] shadow-lg sm:px-6 sm:py-9 md:px-10 md:py-10">
         <div className="absolute -right-20 -top-20 h-56 w-56 rounded-full bg-[#ba8c60]/12 blur-3xl" />
 
         <div className="relative grid gap-6 lg:grid-cols-[1.4fr_1fr] lg:items-end">
@@ -35,12 +35,12 @@ export default async function HomePage() {
               ke WhatsApp.
             </p>
 
-            <div className="mt-6 inline-flex items-center rounded-full border border-[#d8c6b0]/35 bg-[#f8efe2]/10 px-4 py-2 text-xs text-[#f5eadf] md:text-sm">
+            <div className="mt-5 inline-flex items-center rounded-full border border-[#d8c6b0]/35 bg-[#f8efe2]/10 px-4 py-2 text-xs text-[#f5eadf] md:text-sm">
               Kurasi autentik • Tampilan modern • Siap koleksi
             </div>
           </div>
 
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-3 sm:gap-3">
             <div className="rounded-xl border border-[#fff8ee]/35 bg-[#f8efe2]/10 p-3 text-center">
               <p className="text-xs text-[#eadccc]">Total</p>
               <p className="mt-1 text-2xl font-semibold">{products.length}</p>
@@ -58,7 +58,7 @@ export default async function HomePage() {
       </header>
 
       <section className="glass-panel space-y-5 rounded-2xl p-4 md:p-6">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-wrap items-center justify-between gap-3">
           <h2 className="text-2xl md:text-3xl">Daftar Produk</h2>
           <span className="rounded-full border border-[#fff8ee] bg-[#fff8f0] px-4 py-1.5 text-sm font-medium text-[#5a4639]">
             {products.length} koleksi

@@ -55,7 +55,7 @@ export default async function ProductDetailPage({
   const requestMessage = createWhatsAppPriceRequestMessage(product);
 
   return (
-    <main className="mx-auto min-h-screen w-full max-w-6xl px-4 py-8 md:px-8 md:py-10">
+    <main className="mx-auto min-h-[100dvh] w-full max-w-6xl px-4 py-6 md:px-8 md:py-10">
       <ProductVisitTracker productId={product.id} productName={product.name} />
 
       <Link
@@ -76,8 +76,8 @@ export default async function ProductDetailPage({
           />
         </div>
 
-        <section className="glass-panel-strong space-y-5 rounded-2xl p-6 md:p-7">
-          <div className="flex items-center gap-3">
+        <section className="glass-panel-strong space-y-5 rounded-2xl p-5 md:p-7">
+          <div className="flex flex-wrap items-center gap-2.5">
             <span
               className={`rounded-full border px-3 py-1 text-xs font-semibold ${
                 product.status === "sold"

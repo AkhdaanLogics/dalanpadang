@@ -1,4 +1,5 @@
 import { loginAdmin } from "@/app/admin/actions";
+import { PasswordField } from "@/components/admin/password-field";
 
 type LoginPageProps = {
   searchParams: Promise<{ error?: string }>;
@@ -8,8 +9,8 @@ export default async function AdminLoginPage({ searchParams }: LoginPageProps) {
   const params = await searchParams;
 
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-md items-center px-4 py-8">
-      <section className="glass-panel-strong w-full rounded-3xl p-7">
+    <main className="mx-auto flex min-h-[100dvh] w-full max-w-md items-center px-4 py-6">
+      <section className="glass-panel-strong w-full rounded-3xl p-5 sm:p-7">
         <p className="mb-2 text-xs uppercase tracking-[0.3em] text-amber-700">
           Akses Terbatas
         </p>
@@ -50,13 +51,7 @@ export default async function AdminLoginPage({ searchParams }: LoginPageProps) {
             >
               Password
             </label>
-            <input
-              id="password"
-              name="password"
-              type="password"
-              required
-              className="field-ui"
-            />
+            <PasswordField />
           </div>
 
           <button type="submit" className="btn-ui btn-dark w-full">

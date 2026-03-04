@@ -21,7 +21,7 @@ export function WatermarkedImage({
   return (
     <div
       className={`relative overflow-hidden rounded-xl border border-amber-900/10 bg-stone-200 ${
-        isDetailMode ? "h-90 md:h-135" : ""
+        isDetailMode ? "min-h-[20rem] sm:min-h-[26rem] md:min-h-[34rem]" : ""
       }`}
     >
       <Image
@@ -32,7 +32,7 @@ export function WatermarkedImage({
         className={`w-full transition duration-500 ${
           isDetailMode
             ? "h-full object-contain bg-stone-100"
-            : "h-64 object-cover"
+            : "h-56 object-cover sm:h-64"
         }`}
       />
       <div
