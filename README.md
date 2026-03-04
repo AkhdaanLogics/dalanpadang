@@ -1,36 +1,181 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Koleksi Keris Antik
 
-## Getting Started
+Website katalog keris antik premium menggunakan Next.js App Router + Supabase + Tailwind CSS.
 
-First, run the development server:
+Semua teks antarmuka pengguna telah disiapkan dalam Bahasa Indonesia.
+
+## Teknologi
+
+- Next.js (versi terbaru)
+- TypeScript
+- Tailwind CSS
+- Supabase (Database, Auth, Storage)
+- Vercel Analytics
+- Siap deploy ke Vercel
+
+## Struktur Proyek
+
+```bash
+app/
+	admin/
+		actions.ts
+		login/page.tsx
+		page.tsx
+		produk/baru/page.tsx
+		produk/[id]/edit/page.tsx
+	api/
+		backup/route.ts
+		inquiries/route.ts
+	produk/[slug]/page.tsx
+	globals.css
+	layout.tsx
+	page.tsx
+components/
+	admin/
+		product-form-fields.tsx
+		product-table.tsx
+		summary-cards.tsx
+	public/
+		product-actions.tsx
+		product-card.tsx
+		product-grid.tsx
+		product-visit-tracker.tsx
+	shared/
+		watermarked-image.tsx
+lib/
+	auth.ts
+	products.ts
+	types.ts
+	supabase/
+		admin.ts
+		client.ts
+		middleware.ts
+		server.ts
+	utils/
+		analytics.ts
+		slugify.ts
+		whatsapp.ts
+supabase/
+	schema.sql
+proxy.ts
+.env.example
+```
+
+## Fitur Publik (`/`)
+
+- Etalase grid produk
+- Badge status `Tersedia` / `Terjual`
+- Overlay `TERJUAL` untuk produk sold
+- Kode produk di pojok kanan atas gambar
+- Watermark CSS semi-transparan (`Koleksi Keris Antik`)
+- Tombol:
+  - `Lihat Detail`
+  - `Chat WhatsApp`
+  - `Request Harga`
+
+## Fitur Detail Produk (`/produk/[slug]`)
+
+- SEO dinamis dengan Metadata API:
+  - Title: `{Nama Produk} | Koleksi Keris Antik`
+  - Description dari deskripsi produk
+  - OpenGraph title, description, image
+  - Canonical URL
+- Template pesan WhatsApp otomatis dengan `encodeURIComponent`
+- Event analytics:
+  - halaman produk dikunjungi
+  - klik WhatsApp
+  - klik Request Harga
+
+## Fitur Admin (`/admin`)
+
+- Login admin dengan Supabase Auth
+- Halaman terlindungi middleware
+- Ringkasan:
+  - Total Produk
+  - Total Terjual
+  - Total Tersedia
+  - Total Permintaan Harga
+- CRUD Produk:
+  - Tambah Produk
+  - Edit Produk
+  - Kode produk otomatis format `A-01` jika field kode dikosongkan saat tambah
+  - Hapus Produk
+  - Ubah Status
+  - Upload gambar ke Supabase Storage
+  - Toggle Tampilkan Harga ke Publik
+
+## API Tambahan
+
+- `GET /api/backup`
+  - Mengunduh semua data produk sebagai JSON
+  - Wajib login admin
+- `POST /api/inquiries`
+  - Menyimpan data permintaan harga ke tabel `inquiries`
+
+## Setup Lokal
+
+1. Salin env:
+
+```bash
+cp .env.example .env.local
+```
+
+2. Isi nilai env sesuai project Supabase.
+
+3. Install dependency:
+
+```bash
+npm install
+```
+
+4. Jalankan SQL di Supabase SQL Editor:
+
+- Gunakan file: `supabase/schema.sql`
+
+5. Jalankan aplikasi:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Konfigurasi Supabase Auth Admin
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Gunakan salah satu cara berikut:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Set `app_metadata.role = "admin"` pada user auth, atau
+2. Isi env `ADMIN_EMAILS` dengan daftar email admin dipisah koma.
 
-## Learn More
+## Deploy ke Vercel
 
-To learn more about Next.js, take a look at the following resources:
+1. Push repository ke GitHub.
+2. Import project ke Vercel.
+3. Tambahkan environment variables berikut di Vercel:
+   - `NEXT_PUBLIC_SITE_URL`
+   - `NEXT_PUBLIC_SUPABASE_URL`
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+   - `SUPABASE_SERVICE_ROLE_KEY`
+   - `SUPABASE_STORAGE_BUCKET`
+   - `WATERMARK_TEXT`
+   - `ADMIN_EMAILS`
+4. Deploy.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Automatic Backup
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Opsi A (sudah aktif)
 
-## Deploy on Vercel
+Gunakan endpoint admin-protected:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- `GET /api/backup`
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Opsi B (Supabase Edge Function harian)
+
+- Buat edge function `daily-backup`.
+- Jadwalkan cron harian di Supabase.
+- Simpan hasil backup ke bucket private `backups`.
+
+## Catatan Keamanan
+
+- Route admin diproteksi middleware.
+- RLS diaktifkan untuk tabel utama.
+- Policy publik default hanya baca produk `available`.
+- Operasi admin memakai verifikasi role admin.
