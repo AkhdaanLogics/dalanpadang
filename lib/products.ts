@@ -2,27 +2,55 @@ import { notFound } from "next/navigation";
 import type { Product } from "@/lib/types";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 
+function isMissingCategoryColumnError(message: string) {
+  const normalized = message.toLowerCase();
+  return (
+    normalized.includes("products.category") ||
+    (normalized.includes("category") &&
+      (normalized.includes("does not exist") ||
+        normalized.includes("schema cache")))
+  );
+}
+
 export async function getPublicProducts() {
   const supabase = createSupabaseAdminClient();
 
-  const { data, error } = await supabase
+  const withCategory = await supabase
     .from("products")
     .select(
       "id,name,slug,code,description,image_url,price,show_price,negotiable,category,status,created_at",
     )
     .order("created_at", { ascending: false });
 
-  if (error) {
-    throw new Error(`Gagal memuat produk: ${error.message}`);
+  if (!withCategory.error) {
+    return (withCategory.data ?? []) as Product[];
   }
 
-  return (data ?? []) as Product[];
+  if (!isMissingCategoryColumnError(withCategory.error.message)) {
+    throw new Error(`Gagal memuat produk: ${withCategory.error.message}`);
+  }
+
+  const fallback = await supabase
+    .from("products")
+    .select(
+      "id,name,slug,code,description,image_url,price,show_price,negotiable,status,created_at",
+    )
+    .order("created_at", { ascending: false });
+
+  if (fallback.error) {
+    throw new Error(`Gagal memuat produk: ${fallback.error.message}`);
+  }
+
+  return (fallback.data ?? []).map((item) => ({
+    ...item,
+    category: null,
+  })) as Product[];
 }
 
 export async function getProductBySlug(slug: string) {
   const supabase = createSupabaseAdminClient();
 
-  const { data, error } = await supabase
+  const withCategory = await supabase
     .from("products")
     .select(
       "id,name,slug,code,description,image_url,price,show_price,negotiable,category,status,created_at",
@@ -30,11 +58,31 @@ export async function getProductBySlug(slug: string) {
     .eq("slug", slug)
     .single();
 
-  if (error || !data) {
-    notFound();
+  if (!withCategory.error && withCategory.data) {
+    return withCategory.data as Product;
   }
 
-  return data as Product;
+  if (
+    withCategory.error &&
+    isMissingCategoryColumnError(withCategory.error.message)
+  ) {
+    const fallback = await supabase
+      .from("products")
+      .select(
+        "id,name,slug,code,description,image_url,price,show_price,negotiable,status,created_at",
+      )
+      .eq("slug", slug)
+      .single();
+
+    if (!fallback.error && fallback.data) {
+      return {
+        ...fallback.data,
+        category: null,
+      } as Product;
+    }
+  }
+
+  notFound();
 }
 
 export async function getAdminSummary() {

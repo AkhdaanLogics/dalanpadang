@@ -5,6 +5,16 @@ import { ProductFormFields } from "@/components/admin/product-form-fields";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import type { Product } from "@/lib/types";
 
+function isMissingCategoryColumnError(message: string) {
+  const normalized = message.toLowerCase();
+  return (
+    normalized.includes("products.category") ||
+    (normalized.includes("category") &&
+      (normalized.includes("does not exist") ||
+        normalized.includes("schema cache")))
+  );
+}
+
 export const dynamic = "force-dynamic";
 
 type EditProductPageProps = {
@@ -19,7 +29,7 @@ export default async function EditProductPage({
   const [{ id }, query] = await Promise.all([params, searchParams]);
   const supabase = createSupabaseAdminClient();
 
-  const { data, error } = await supabase
+  const withCategory = await supabase
     .from("products")
     .select(
       "id,name,slug,code,description,image_url,price,show_price,negotiable,category,status,created_at",
@@ -27,11 +37,65 @@ export default async function EditProductPage({
     .eq("id", id)
     .single();
 
-  if (error || !data) {
-    notFound();
+  if (!withCategory.error && withCategory.data) {
+    const product = withCategory.data as Product;
+
+    return (
+      <section className="glass-panel space-y-4 rounded-2xl p-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-xs uppercase tracking-[0.25em] text-amber-700">
+              Kelola Produk
+            </p>
+            <h2 className="text-3xl text-stone-900">Edit Produk</h2>
+          </div>
+          <Link href="/admin" className="btn-ui btn-neutral rounded-full">
+            Kembali ke Dashboard
+          </Link>
+        </div>
+
+        {query.error ? (
+          <div className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+            {query.error}
+          </div>
+        ) : null}
+
+        <form action={updateProduct} className="space-y-4">
+          <ProductFormFields
+            product={product}
+            currentCode={product.code}
+            submitLabel="Perbarui Produk"
+          />
+        </form>
+      </section>
+    );
   }
 
-  const product = data as Product;
+  let fallbackProduct: Product | null = null;
+
+  if (
+    withCategory.error &&
+    isMissingCategoryColumnError(withCategory.error.message)
+  ) {
+    const fallback = await supabase
+      .from("products")
+      .select(
+        "id,name,slug,code,description,image_url,price,show_price,negotiable,status,created_at",
+      )
+      .eq("id", id)
+      .single();
+
+    if (!fallback.error && fallback.data) {
+      fallbackProduct = {
+        ...fallback.data,
+        category: null,
+      } as Product;
+    }
+  }
+
+  if (!fallbackProduct) {
+    notFound();
+  }
 
   return (
     <section className="glass-panel space-y-4 rounded-2xl p-6">
@@ -55,8 +119,8 @@ export default async function EditProductPage({
 
       <form action={updateProduct} className="space-y-4">
         <ProductFormFields
-          product={product}
-          currentCode={product.code}
+          product={fallbackProduct}
+          currentCode={fallbackProduct.code}
           submitLabel="Perbarui Produk"
         />
       </form>

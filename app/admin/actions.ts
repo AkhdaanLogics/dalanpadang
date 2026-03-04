@@ -15,6 +15,16 @@ import {
 } from "@/lib/utils/product-code";
 import { slugify } from "@/lib/utils/slugify";
 
+function isMissingCategoryColumnError(message: string) {
+  const normalized = message.toLowerCase();
+  return (
+    normalized.includes("products.category") ||
+    (normalized.includes("category") &&
+      (normalized.includes("does not exist") ||
+        normalized.includes("schema cache")))
+  );
+}
+
 async function ensureAdmin() {
   const supabase = await createSupabaseServerClient();
   const {
@@ -132,7 +142,7 @@ export async function createProduct(formData: FormData) {
   const slug = `${slugify(name)}-${slugify(code)}`;
 
   const supabase = createSupabaseAdminClient();
-  const { error } = await supabase.from("products").insert({
+  let { error } = await supabase.from("products").insert({
     name,
     code,
     slug,
@@ -144,6 +154,22 @@ export async function createProduct(formData: FormData) {
     negotiable,
     status,
   });
+
+  if (error && isMissingCategoryColumnError(error.message)) {
+    const fallbackInsert = await supabase.from("products").insert({
+      name,
+      code,
+      slug,
+      description,
+      image_url: imageUrl,
+      price,
+      show_price: showPrice,
+      negotiable,
+      status,
+    });
+
+    error = fallbackInsert.error;
+  }
 
   if (error) {
     redirect(`/admin/produk/baru?error=${encodeURIComponent(error.message)}`);
@@ -194,7 +220,7 @@ export async function updateProduct(formData: FormData) {
   const slug = `${slugify(name)}-${slugify(finalCode)}`;
 
   const supabase = createSupabaseAdminClient();
-  const { error } = await supabase
+  let { error } = await supabase
     .from("products")
     .update({
       name,
@@ -209,6 +235,25 @@ export async function updateProduct(formData: FormData) {
       status,
     })
     .eq("id", id);
+
+  if (error && isMissingCategoryColumnError(error.message)) {
+    const fallbackUpdate = await supabase
+      .from("products")
+      .update({
+        name,
+        code: finalCode,
+        slug,
+        description,
+        image_url: imageUrl,
+        price,
+        show_price: showPrice,
+        negotiable,
+        status,
+      })
+      .eq("id", id);
+
+    error = fallbackUpdate.error;
+  }
 
   if (error) {
     redirect(

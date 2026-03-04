@@ -111,6 +111,9 @@ proxy.ts
   - Wajib login admin
 - `POST /api/inquiries`
   - Menyimpan data permintaan harga ke tabel `inquiries`
+- `POST /api/telegram`
+  - Webhook Telegram untuk ubah status produk via chat
+  - Contoh perintah: `A-01 terjual`, `A-01 sold`, `A-01 tersedia`
 
 ## Setup Lokal
 
@@ -157,7 +160,28 @@ Gunakan salah satu cara berikut:
    - `SUPABASE_STORAGE_BUCKET`
    - `WATERMARK_TEXT`
    - `ADMIN_EMAILS`
+   - `TELEGRAM_BOT_TOKEN`
+   - `TELEGRAM_WEBHOOK_SECRET`
 4. Deploy.
+
+## Setup Bot Telegram (Opsional)
+
+1. Buat bot baru lewat `@BotFather` dan ambil token bot.
+2. Isi env:
+   - `TELEGRAM_BOT_TOKEN`
+   - `TELEGRAM_WEBHOOK_SECRET` (string acak)
+3. Set webhook (ganti domain dan value env):
+
+```bash
+curl -X POST "https://api.telegram.org/bot<TELEGRAM_BOT_TOKEN>/setWebhook" \\
+  -H "Content-Type: application/json" \\
+  -d '{"url":"https://your-domain.com/api/telegram","secret_token":"<TELEGRAM_WEBHOOK_SECRET>"}'
+```
+
+Perintah chat yang didukung:
+
+- `A-01 terjual` atau `A-01 sold` -> set status ke `sold`
+- `A-01 tersedia` atau `A-01 available` -> set status ke `available`
 
 ## Automatic Backup
 
